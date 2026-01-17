@@ -18,32 +18,34 @@ const db = new Database(dbPath);
 
 // ============ WORKSPACE SUPPORT ============
 
-// Migrate: Drop old workspaces table if it has wrong schema, then recreate
+// Ensure workspaces table has correct schema (compatible with Tauri app)
 try {
-  // Check if table exists and has correct schema
   const tableInfo = db.prepare("PRAGMA table_info(workspaces)").all();
-  const hasUpdatedAt = tableInfo.some(col => col.name === 'updated_at');
+  const hasColor = tableInfo.some(col => col.name === 'color');
 
-  if (tableInfo.length > 0 && !hasUpdatedAt) {
-    // Old schema detected, drop and recreate
-    console.log('[Migration] Dropping old workspaces table...');
-    db.exec('DROP TABLE workspaces');
+  if (tableInfo.length > 0 && !hasColor) {
+    // Add missing color column
+    console.log('[Migration] Adding color column to workspaces table...');
+    db.exec("ALTER TABLE workspaces ADD COLUMN color TEXT DEFAULT '#3b82f6'");
+  }
+
+  // Remove updated_at if it exists (not in Tauri schema)
+  const hasUpdatedAt = tableInfo.some(col => col.name === 'updated_at');
+  if (hasUpdatedAt) {
+    // SQLite doesn't support DROP COLUMN easily, just ignore this field
+    console.log('[Note] Workspaces table has updated_at column (will be ignored)');
   }
 } catch (e) {
-  // Table doesn't exist, that's fine
+  console.log('[Migration] Workspaces table check:', e.message);
 }
 
-// Create workspaces table if not exists
-db.exec(`
-  CREATE TABLE IF NOT EXISTS workspaces (
-    id TEXT PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-  )
-`);
+// Generate a random color for new workspaces
+function randomColor() {
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
 
-// Get or create workspace by name
+// Get or create workspace by name (handles both old and new schema)
 function getOrCreateWorkspace(name) {
   if (!name) return null;
 
@@ -53,10 +55,22 @@ function getOrCreateWorkspace(name) {
   if (!workspace) {
     const id = uuidv4();
     const timestamp = now();
-    db.prepare('INSERT INTO workspaces (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)')
-      .run(id, name, timestamp, timestamp);
-    workspace = { id, name, created_at: timestamp, updated_at: timestamp };
-    console.log(`[Workspace] Created new workspace: "${name}"`);
+    const color = randomColor();
+
+    // Check if table has updated_at column
+    const tableInfo = db.prepare("PRAGMA table_info(workspaces)").all();
+    const hasUpdatedAt = tableInfo.some(col => col.name === 'updated_at');
+
+    if (hasUpdatedAt) {
+      db.prepare('INSERT INTO workspaces (id, name, color, created_at, updated_at) VALUES (?, ?, ?, ?, ?)')
+        .run(id, name, color, timestamp, timestamp);
+    } else {
+      db.prepare('INSERT INTO workspaces (id, name, color, created_at) VALUES (?, ?, ?, ?)')
+        .run(id, name, color, timestamp);
+    }
+
+    workspace = { id, name, color, created_at: timestamp };
+    console.log(`[Workspace] Created new workspace: "${name}" with color ${color}`);
   }
 
   return workspace;
