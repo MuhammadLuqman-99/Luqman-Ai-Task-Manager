@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "FlowTask",
+    "productName": "Luqman AI Task Manager",
     "version": "1.0.0"
   },
   "tauri": {
@@ -19,7 +19,7 @@
     "bundle": {
       "active": false,
       "icon": [],
-      "identifier": "com.flowtask.app",
+      "identifier": "com.luqman.aitaskmanager",
       "targets": "all"
     },
     "security": {
@@ -30,7 +30,7 @@
         "fullscreen": false,
         "height": 800,
         "resizable": true,
-        "title": "FlowTask",
+        "title": "Luqman AI Task Manager",
         "width": 1400,
         "minWidth": 1000,
         "minHeight": 600

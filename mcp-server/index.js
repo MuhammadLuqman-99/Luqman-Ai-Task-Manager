@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * FlowTask MCP Server
- * Allows Claude to directly manage tasks in FlowTask app
+ * Luqman AI Task Manager - MCP Server
+ * Allows Claude to directly manage tasks
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -32,7 +32,7 @@ function now() {
 // Create MCP server
 const server = new Server(
   {
-    name: 'flowtask',
+    name: 'luqman-task-manager',
     version: '1.0.0',
   },
   {
@@ -48,7 +48,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'flowtask_add',
-        description: 'Add a new task to FlowTask app',
+        description: 'Add a new task to Luqman Task Manager app',
         inputSchema: {
           type: 'object',
           properties: {
@@ -81,7 +81,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'flowtask_update',
-        description: 'Update an existing task in FlowTask',
+        description: 'Update an existing task in Luqman Task Manager',
         inputSchema: {
           type: 'object',
           properties: {
@@ -124,7 +124,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'flowtask_list',
-        description: 'List all tasks in FlowTask',
+        description: 'List all tasks in Luqman Task Manager',
         inputSchema: {
           type: 'object',
           properties: {
@@ -183,7 +183,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: 'text',
-              text: `✅ Task added to FlowTask!\n   ID: ${taskId}\n   Title: ${args.title}\n   Type: ${taskType}\n   Priority: P${priority}\n   Status: ${status}`,
+              text: `✅ Task added to Luqman Task Manager!\n   ID: ${taskId}\n   Title: ${args.title}\n   Type: ${taskType}\n   Priority: P${priority}\n   Status: ${status}`,
             },
           ],
         };
@@ -283,7 +283,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           };
         }
 
-        let output = '📋 FlowTask Tasks:\n';
+        let output = '📋 Luqman Task Manager Tasks:\n';
         output += '─'.repeat(50) + '\n';
         tasks.forEach((task) => {
           const statusIcon = {
@@ -340,7 +340,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('FlowTask MCP Server running');
+  console.error('Luqman Task Manager MCP Server running');
 }
 
 main().catch(console.error);

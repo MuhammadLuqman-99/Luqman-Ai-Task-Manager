@@ -1,11 +1,11 @@
 {
-  "name": "flowtask-mcp",
+  "name": "luqman-ai-task-manager-mcp",
   "version": "1.0.0",
   "type": "module",
-  "description": "MCP Server for FlowTask - allows Claude to manage tasks",
+  "description": "MCP Server for Luqman AI Task Manager - allows Claude to manage tasks",
   "main": "index.js",
   "bin": {
-    "flowtask-mcp": "./index.js"
+    "luqman-mcp": "./index.js"
   },
   "scripts": {
     "start": "node index.js"

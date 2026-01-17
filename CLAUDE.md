@@ -1,8 +1,8 @@
-# FlowTask Project Instructions
+# Luqman AI Task Manager - Project Instructions
 
 ## Task Management
 
-**IMPORTANT:** This project has its own task management system (FlowTask).
+**IMPORTANT:** This project has its own task management system (Luqman AI Task Manager).
 
 When the user asks to:
 - Add a task
@@ -13,7 +13,7 @@ When the user asks to:
 - Show tasks
 - List tasks
 
-**DO NOT use the internal TodoWrite tool.** Instead, use the FlowTask API:
+**DO NOT use the internal TodoWrite tool.** Instead, use the Luqman AI Task Manager API:
 
 ## API Server (Recommended)
 
