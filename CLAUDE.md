@@ -1,19 +1,55 @@
 # Luqman AI Task Manager - Project Instructions
 
-## Task Management
+## TASK MANAGEMENT - DUAL TRACKING
 
-**IMPORTANT:** This project has its own task management system (Luqman AI Task Manager).
+When the user asks to "create task", "add task", "update task", "complete task", "delete task", "show tasks", or "list tasks":
 
-When the user asks to:
-- Add a task
-- Create a task
-- Update a task
-- Complete a task
-- Delete a task
-- Show tasks
-- List tasks
+**DO BOTH:**
+1. **First** → Call the Luqman AI Task Manager API (so tasks appear in the app)
+2. **Then** → Use TodoWrite to track the same task in Claude's interface (for visual progress)
 
-**DO NOT use the internal TodoWrite tool.** Instead, use the Luqman AI Task Manager API:
+This way:
+- Tasks are saved in the user's Luqman AI Task Manager app (persistent)
+- Claude also shows progress visually during the session
+
+## Workspace Auto-Detection
+
+**IMPORTANT:** Always detect the current folder name and use it as the workspace!
+
+1. Get the current working directory folder name (e.g., if in `/portfolio`, workspace = "portfolio")
+2. Include `"workspace": "FOLDER_NAME"` in ALL task API calls
+3. This ensures tasks are organized by project
+
+## Quick Commands (Copy-Paste Ready)
+
+**Create a task (with workspace):**
+```bash
+curl -s -X POST http://localhost:3847/tasks -H "Content-Type: application/json" -d "{\"title\":\"YOUR_TASK_TITLE\",\"type\":\"feat\",\"priority\":2,\"workspace\":\"FOLDER_NAME\"}"
+```
+
+**List tasks for current workspace:**
+```bash
+curl -s "http://localhost:3847/tasks?workspace=FOLDER_NAME"
+```
+
+**List all workspaces:**
+```bash
+curl -s http://localhost:3847/workspaces
+```
+
+**Update task progress:**
+```bash
+curl -s -X PUT http://localhost:3847/tasks/TASK_ID -H "Content-Type: application/json" -d "{\"progress\":50}"
+```
+
+**Complete a task:**
+```bash
+curl -s -X POST http://localhost:3847/tasks/TASK_ID/complete
+```
+
+---
+
+## Full API Documentation
 
 ## API Server (Recommended)
 

@@ -16,6 +16,52 @@ const PORT = 3847;
 const dbPath = path.join(os.homedir(), 'AppData', 'Local', 'flowtask', 'flowtask.db');
 const db = new Database(dbPath);
 
+// ============ WORKSPACE SUPPORT ============
+
+// Migrate: Drop old workspaces table if it has wrong schema, then recreate
+try {
+  // Check if table exists and has correct schema
+  const tableInfo = db.prepare("PRAGMA table_info(workspaces)").all();
+  const hasUpdatedAt = tableInfo.some(col => col.name === 'updated_at');
+
+  if (tableInfo.length > 0 && !hasUpdatedAt) {
+    // Old schema detected, drop and recreate
+    console.log('[Migration] Dropping old workspaces table...');
+    db.exec('DROP TABLE workspaces');
+  }
+} catch (e) {
+  // Table doesn't exist, that's fine
+}
+
+// Create workspaces table if not exists
+db.exec(`
+  CREATE TABLE IF NOT EXISTS workspaces (
+    id TEXT PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )
+`);
+
+// Get or create workspace by name
+function getOrCreateWorkspace(name) {
+  if (!name) return null;
+
+  const normalizedName = name.toLowerCase().trim();
+  let workspace = db.prepare('SELECT * FROM workspaces WHERE LOWER(name) = ?').get(normalizedName);
+
+  if (!workspace) {
+    const id = uuidv4();
+    const timestamp = now();
+    db.prepare('INSERT INTO workspaces (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)')
+      .run(id, name, timestamp, timestamp);
+    workspace = { id, name, created_at: timestamp, updated_at: timestamp };
+    console.log(`[Workspace] Created new workspace: "${name}"`);
+  }
+
+  return workspace;
+}
+
 function generateTaskId(taskType) {
   return `${taskType}-${uuidv4().substring(0, 4)}`;
 }
@@ -97,27 +143,46 @@ const server = http.createServer(async (req, res) => {
   const pathname = url.pathname;
 
   try {
-    // GET /tasks - List all tasks
+    // GET /workspaces - List all workspaces
+    if (req.method === 'GET' && pathname === '/workspaces') {
+      const workspaces = db.prepare('SELECT * FROM workspaces ORDER BY name ASC').all();
+      return sendJSON(res, { success: true, workspaces, count: workspaces.length });
+    }
+
+    // GET /tasks - List all tasks (with optional workspace filter)
     if (req.method === 'GET' && pathname === '/tasks') {
       const status = url.searchParams.get('status');
+      const workspace = url.searchParams.get('workspace');
       const limit = parseInt(url.searchParams.get('limit') || '50');
 
-      let sql = 'SELECT * FROM tasks WHERE is_deleted = 0';
+      let sql = 'SELECT t.*, w.name as workspace_name FROM tasks t LEFT JOIN workspaces w ON t.workspace_id = w.id WHERE t.is_deleted = 0';
       const params = [];
 
       if (status) {
-        sql += ' AND status = ?';
+        sql += ' AND t.status = ?';
         params.push(status.toUpperCase());
       }
 
-      sql += ' ORDER BY created_at DESC LIMIT ?';
+      if (workspace) {
+        // Get workspace by name
+        const ws = db.prepare('SELECT id FROM workspaces WHERE LOWER(name) = ?').get(workspace.toLowerCase());
+        if (ws) {
+          sql += ' AND t.workspace_id = ?';
+          params.push(ws.id);
+        } else {
+          // No workspace found, return empty
+          return sendJSON(res, { success: true, tasks: [], count: 0, workspace: workspace, message: 'Workspace not found' });
+        }
+      }
+
+      sql += ' ORDER BY t.created_at DESC LIMIT ?';
       params.push(limit);
 
       const tasks = db.prepare(sql).all(...params);
-      return sendJSON(res, { success: true, tasks, count: tasks.length });
+      return sendJSON(res, { success: true, tasks, count: tasks.length, workspace: workspace || 'all' });
     }
 
-    // POST /tasks - Create new task
+    // POST /tasks - Create new task (with optional workspace)
     if (req.method === 'POST' && pathname === '/tasks') {
       const body = await parseBody(req);
 
@@ -133,15 +198,26 @@ const server = http.createServer(async (req, res) => {
       const description = body.description || null;
       const timestamp = now();
 
+      // Handle workspace - auto-create if provided
+      let workspaceId = null;
+      let workspaceName = null;
+      if (body.workspace) {
+        const workspace = getOrCreateWorkspace(body.workspace);
+        if (workspace) {
+          workspaceId = workspace.id;
+          workspaceName = workspace.name;
+        }
+      }
+
       db.prepare(`
         INSERT INTO tasks (id, task_id, title, description, status, priority, task_type, workspace_id, tags, progress, is_ai_linked, is_deleted, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, '[]', 0, 1, 0, ?, ?)
-      `).run(id, taskId, body.title, description, status, priority, taskType, null, timestamp, timestamp);
+      `).run(id, taskId, body.title, description, status, priority, taskType, workspaceId, timestamp, timestamp);
 
       return sendJSON(res, {
         success: true,
         message: 'Task created',
-        task: { id, taskId, title: body.title, type: taskType, priority, status }
+        task: { id, taskId, title: body.title, type: taskType, priority, status, workspace: workspaceName }
       });
     }
 
@@ -241,16 +317,19 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && pathname === '/') {
       return sendJSON(res, {
         name: 'Luqman AI Task Manager API',
-        version: '1.1.0',
+        version: '1.2.0',
         features: [
+          'Workspace support - auto-create workspace from folder name',
           'Auto-complete tasks when progress = 100%',
           'Auto-move to IN_PROGRESS when progress > 0',
           'Sync endpoint for real-time updates'
         ],
         endpoints: {
+          'GET /workspaces': 'List all workspaces',
           'GET /tasks': 'List all tasks',
+          'GET /tasks?workspace=name': 'List tasks filtered by workspace',
           'GET /sync?since=': 'Get tasks updated since timestamp',
-          'POST /tasks': 'Create task { title, type?, priority?, status?, description? }',
+          'POST /tasks': 'Create task { title, type?, priority?, status?, description?, workspace? }',
           'PUT /tasks/:id': 'Update task (with automation)',
           'POST /tasks/:id/complete': 'Mark task as done',
           'DELETE /tasks/:id': 'Delete task'
