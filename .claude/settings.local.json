@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd //c \"taskkill /F /PID 23356\")",
+      "Bash(where:*)",
+      "Bash(node:*)",
+      "Bash(cargo build:*)",
+      "Bash(del \"c:\\\\Users\\\\desa murni\\\\Desktop\\\\flowtask\\\\tmpclaude-ce7e-cwd\")",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(cargo clean:*)",
+      "Bash(npm run tauri:*)",
+      "Bash(move:*)",
+      "Bash(cmd /c \"move \"\"c:\\\\Users\\\\desa murni\\\\Desktop\\\\flowtask\\\\scripts\\\\task-cli.js\"\" \"\"c:\\\\Users\\\\desa murni\\\\Desktop\\\\flowtask\\\\scripts\\\\task-cli.cjs\"\"\")",
+      "Bash(timeout:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

@@ -1,0 +1,100 @@
+import { Task, TASK_TYPES, PRIORITIES } from '@/types';
+import { useStore } from '@/stores/useStore';
+import clsx from 'clsx';
+
+interface TaskCardProps {
+  task: Task;
+  onDragStart: (e: React.DragEvent) => void;
+  isDragging: boolean;
+}
+
+export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
+  const { setEditingTask } = useStore();
+
+  const taskType = TASK_TYPES.find((t) => t.id === task.taskType);
+  const priority = PRIORITIES.find((p) => p.id === task.priority);
+
+  return (
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onClick={() => setEditingTask(task)}
+      className={clsx(
+        'task-card bg-white rounded-lg p-3 cursor-pointer border border-slate-200 shadow-sm',
+        isDragging && 'opacity-50 rotate-3'
+      )}
+    >
+      {/* Header: Priority + Task ID + AI Badge */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span
+            className="px-1.5 py-0.5 text-xs font-semibold rounded"
+            style={{
+              backgroundColor: `${priority?.color}20`,
+              color: priority?.color,
+            }}
+          >
+            P{task.priority}
+          </span>
+          <span className="text-xs text-slate-400 font-mono">{task.taskId}</span>
+        </div>
+        {task.isAiLinked && (
+          <span className="text-xs bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded">
+            @ai
+          </span>
+        )}
+      </div>
+
+      {/* Title */}
+      <h3 className="font-medium text-slate-800 text-sm mb-3 line-clamp-2">
+        {task.title}
+      </h3>
+
+      {/* Footer: Type + Progress + AI indicator */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span
+            className="px-2 py-0.5 text-xs font-medium rounded"
+            style={{
+              backgroundColor: `${taskType?.color}15`,
+              color: taskType?.color,
+            }}
+          >
+            {task.taskType}
+          </span>
+
+          {task.progress > 0 && (
+            <span
+              className={clsx(
+                'px-2 py-0.5 text-xs font-medium rounded',
+                task.progress === 100
+                  ? 'bg-green-100 text-green-600'
+                  : 'bg-blue-100 text-blue-600'
+              )}
+            >
+              {task.progress}%
+            </span>
+          )}
+        </div>
+
+        {task.isAiLinked && (
+          <span className="text-violet-500 text-sm">@ai</span>
+        )}
+      </div>
+
+      {/* Progress Bar */}
+      {task.progress > 0 && task.progress < 100 && (
+        <div className="mt-2 h-1 bg-slate-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-blue-500 rounded-full transition-all"
+            style={{ width: `${task.progress}%` }}
+          />
+        </div>
+      )}
+
+      {task.progress === 100 && (
+        <div className="mt-2 h-1 bg-green-500 rounded-full" />
+      )}
+    </div>
+  );
+}

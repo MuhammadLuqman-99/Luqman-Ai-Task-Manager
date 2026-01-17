@@ -1,0 +1,18 @@
+{
+  "name": "flowtask-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP Server for FlowTask - allows Claude to manage tasks",
+  "main": "index.js",
+  "bin": {
+    "flowtask-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "sql.js": "^1.10.0",
+    "uuid": "^9.0.0"
+  }
+}
