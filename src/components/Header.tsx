@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '@/stores/useStore';
-import { Search, Plus, Trash2, Filter, ChevronDown, Folder } from 'lucide-react';
+import { Search, Plus, Trash2, Filter, ChevronDown, Folder, Moon, Sun } from 'lucide-react';
 import { PageType } from '@/types';
 import clsx from 'clsx';
 
@@ -30,6 +30,8 @@ export function Header() {
     setFilterPriority,
     currentPage,
     setCurrentPage,
+    darkMode,
+    toggleDarkMode,
   } = useStore();
 
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -60,16 +62,16 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-white border-b border-slate-200 px-4 py-3">
+    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 transition-colors">
       <div className="flex items-center justify-between">
         {/* Left: Logo + New Task */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">F</span>
+              <span className="text-white font-bold text-sm">L</span>
             </div>
-            <span className="font-semibold text-slate-800">Flowtask</span>
-            <span className="text-slate-400 text-sm">Flow. Ship. Repeat.</span>
+            <span className="font-semibold text-slate-800 dark:text-white">Luqman AI</span>
+            <span className="text-slate-400 dark:text-slate-500 text-sm">Task Manager</span>
           </div>
 
           <button
@@ -86,26 +88,26 @@ export function Header() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
             >
               <Folder size={18} className="text-amber-500" />
-              <span className="font-medium">
+              <span className="font-medium dark:text-white">
                 {selectedWorkspace?.name || 'All Workspaces'}
               </span>
-              <span className="text-slate-500">({totalTasks})</span>
+              <span className="text-slate-500 dark:text-slate-400">({totalTasks})</span>
               <ChevronDown size={16} className="text-slate-400" />
             </button>
 
             {showWorkspaceDropdown && (
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
                 <button
                   onClick={() => {
                     setSelectedWorkspace(null);
                     setShowWorkspaceDropdown(false);
                   }}
                   className={clsx(
-                    'w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition-colors',
-                    !selectedWorkspaceId && 'bg-blue-50 text-blue-600'
+                    'w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors dark:text-white',
+                    !selectedWorkspaceId && 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                   )}
                 >
                   <Folder size={18} className="text-slate-400" />
@@ -115,7 +117,7 @@ export function Header() {
                   </span>
                 </button>
 
-                <div className="border-t border-slate-100 my-2" />
+                <div className="border-t border-slate-100 dark:border-slate-700 my-2" />
 
                 {workspaces.map((workspace) => (
                   <button
@@ -125,8 +127,8 @@ export function Header() {
                       setShowWorkspaceDropdown(false);
                     }}
                     className={clsx(
-                      'w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition-colors',
-                      selectedWorkspaceId === workspace.id && 'bg-blue-50 text-blue-600'
+                      'w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors dark:text-white',
+                      selectedWorkspaceId === workspace.id && 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                     )}
                   >
                     <div
@@ -141,14 +143,14 @@ export function Header() {
                   </button>
                 ))}
 
-                <div className="border-t border-slate-100 my-2" />
+                <div className="border-t border-slate-100 dark:border-slate-700 my-2" />
 
                 <button
                   onClick={() => {
                     setShowNewWorkspaceModal(true);
                     setShowWorkspaceDropdown(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-blue-500 hover:bg-blue-50 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
                 >
                   <Plus size={18} />
                   <span>New Workspace</span>
@@ -165,12 +167,12 @@ export function Header() {
               placeholder="Search tasks... (Ctrl+K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2 bg-slate-100 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              className="w-64 pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-700 dark:text-white rounded-lg border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-600 transition-all placeholder:text-slate-400"
             />
           </div>
         </div>
 
-        {/* Right: Filters + Trash */}
+        {/* Right: Filters + Trash + Dark Mode */}
         <div className="flex items-center gap-3">
           {/* Filters */}
           <div className="relative" ref={filterRef}>
@@ -179,8 +181,8 @@ export function Header() {
               className={clsx(
                 'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors',
                 filterType || filterPriority
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                  : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300'
               )}
             >
               <Filter size={18} />
@@ -188,15 +190,15 @@ export function Header() {
             </button>
 
             {showFilterDropdown && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50">
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
                 <div className="px-3 py-1 text-xs font-medium text-slate-400 uppercase">Type</div>
                 {['feat', 'bug', 'research', 'chore'].map((type) => (
                   <button
                     key={type}
                     onClick={() => setFilterType(filterType === type ? null : (type as any))}
                     className={clsx(
-                      'w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50',
-                      filterType === type && 'bg-blue-50 text-blue-600'
+                      'w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-white',
+                      filterType === type && 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                     )}
                   >
                     <span className="capitalize">{type}</span>
@@ -204,7 +206,7 @@ export function Header() {
                   </button>
                 ))}
 
-                <div className="border-t border-slate-100 my-2" />
+                <div className="border-t border-slate-100 dark:border-slate-700 my-2" />
 
                 <div className="px-3 py-1 text-xs font-medium text-slate-400 uppercase">Priority</div>
                 {[1, 2, 3].map((p) => (
@@ -212,8 +214,8 @@ export function Header() {
                     key={p}
                     onClick={() => setFilterPriority(filterPriority === p ? null : (p as any))}
                     className={clsx(
-                      'w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50',
-                      filterPriority === p && 'bg-blue-50 text-blue-600'
+                      'w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-white',
+                      filterPriority === p && 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                     )}
                   >
                     <span>P{p}</span>
@@ -223,13 +225,13 @@ export function Header() {
 
                 {(filterType || filterPriority) && (
                   <>
-                    <div className="border-t border-slate-100 my-2" />
+                    <div className="border-t border-slate-100 dark:border-slate-700 my-2" />
                     <button
                       onClick={() => {
                         setFilterType(null);
                         setFilterPriority(null);
                       }}
-                      className="w-full px-3 py-2 text-red-500 hover:bg-red-50"
+                      className="w-full px-3 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30"
                     >
                       Clear Filters
                     </button>
@@ -239,13 +241,26 @@ export function Header() {
             )}
           </div>
 
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={toggleDarkMode}
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {darkMode ? (
+              <Sun size={18} className="text-amber-500" />
+            ) : (
+              <Moon size={18} className="text-slate-500" />
+            )}
+          </button>
+
           {/* Trash */}
           <button
             onClick={() => setShowTrash(true)}
-            className="relative flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+            className="relative flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
           >
-            <Trash2 size={18} className="text-slate-500" />
-            <span>Trash</span>
+            <Trash2 size={18} className="text-slate-500 dark:text-slate-400" />
+            <span className="dark:text-white">Trash</span>
             {trash.length > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 {trash.length}
@@ -264,8 +279,8 @@ export function Header() {
             className={clsx(
               'flex items-center gap-2 pb-2 border-b-2 transition-colors',
               currentPage === tab.id
-                ? 'border-blue-500 text-blue-600 font-medium'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-medium'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
             )}
           >
             <span>{tab.icon}</span>

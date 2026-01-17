@@ -20,6 +20,7 @@ interface AppState {
   showNewTaskModal: boolean;
   showNewWorkspaceModal: boolean;
   editingTask: Task | null;
+  darkMode: boolean;
 
   // Filters
   filterType: TaskType | null;
@@ -28,6 +29,9 @@ interface AppState {
 
   // Navigation
   setCurrentPage: (page: PageType) => void;
+
+  // Theme
+  toggleDarkMode: () => void;
 
   // Actions
   setSelectedWorkspace: (id: string | null) => void;
@@ -124,12 +128,26 @@ export const useStore = create<AppState>()(
       showNewTaskModal: false,
       showNewWorkspaceModal: false,
       editingTask: null,
+      darkMode: false,
       filterType: null,
       filterPriority: null,
       filterAiLinked: false,
 
       // Navigation
       setCurrentPage: (page) => set({ currentPage: page }),
+
+      // Theme
+      toggleDarkMode: () => {
+        set((state) => {
+          const newDarkMode = !state.darkMode;
+          if (newDarkMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          return { darkMode: newDarkMode };
+        });
+      },
 
       // UI Actions
       setSelectedWorkspace: (id) => {
@@ -382,12 +400,19 @@ export const useStore = create<AppState>()(
       },
     }),
     {
-      name: 'flowtask-storage',
+      name: 'luqman-task-manager-storage',
       partialize: (state) => ({
         plans: state.plans,
         rules: state.rules,
         currentPage: state.currentPage,
+        darkMode: state.darkMode,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Apply dark mode class on app load
+        if (state?.darkMode) {
+          document.documentElement.classList.add('dark');
+        }
+      },
     }
   )
 );

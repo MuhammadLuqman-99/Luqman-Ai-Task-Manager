@@ -43,7 +43,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50">
+    <div className="h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors">
       <Header />
       <main className="flex-1 overflow-hidden">
         {renderPage()}

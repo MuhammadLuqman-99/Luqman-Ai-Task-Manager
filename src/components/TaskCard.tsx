@@ -20,7 +20,7 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
       onDragStart={onDragStart}
       onClick={() => setEditingTask(task)}
       className={clsx(
-        'task-card bg-white rounded-lg p-3 cursor-pointer border border-slate-200 shadow-sm',
+        'task-card bg-white dark:bg-slate-700 rounded-lg p-3 cursor-pointer border border-slate-200 dark:border-slate-600 shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all',
         isDragging && 'opacity-50 rotate-3'
       )}
     >
@@ -36,17 +36,17 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
           >
             P{task.priority}
           </span>
-          <span className="text-xs text-slate-400 font-mono">{task.taskId}</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">{task.taskId}</span>
         </div>
         {task.isAiLinked && (
-          <span className="text-xs bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded">
+          <span className="text-xs bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 px-1.5 py-0.5 rounded">
             @ai
           </span>
         )}
       </div>
 
       {/* Title */}
-      <h3 className="font-medium text-slate-800 text-sm mb-3 line-clamp-2">
+      <h3 className="font-medium text-slate-800 dark:text-white text-sm mb-3 line-clamp-2">
         {task.title}
       </h3>
 
@@ -68,8 +68,8 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
               className={clsx(
                 'px-2 py-0.5 text-xs font-medium rounded',
                 task.progress === 100
-                  ? 'bg-green-100 text-green-600'
-                  : 'bg-blue-100 text-blue-600'
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                  : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
               )}
             >
               {task.progress}%
@@ -78,13 +78,13 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
         </div>
 
         {task.isAiLinked && (
-          <span className="text-violet-500 text-sm">@ai</span>
+          <span className="text-violet-500 dark:text-violet-400 text-sm">@ai</span>
         )}
       </div>
 
       {/* Progress Bar */}
       {task.progress > 0 && task.progress < 100 && (
-        <div className="mt-2 h-1 bg-slate-100 rounded-full overflow-hidden">
+        <div className="mt-2 h-1 bg-slate-100 dark:bg-slate-600 rounded-full overflow-hidden">
           <div
             className="h-full bg-blue-500 rounded-full transition-all"
             style={{ width: `${task.progress}%` }}

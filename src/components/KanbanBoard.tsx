@@ -65,7 +65,7 @@ export function KanbanBoard() {
 
   return (
     <div className="h-full p-4 overflow-x-auto">
-      <div className="flex items-center gap-2 mb-4 text-sm text-slate-500">
+      <div className="flex items-center gap-2 mb-4 text-sm text-slate-500 dark:text-slate-400">
         <span>Showing {filteredTasks.length} of {tasks.length} tasks</span>
       </div>
 
@@ -74,8 +74,8 @@ export function KanbanBoard() {
           <div
             key={column.id}
             className={clsx(
-              'flex-1 min-w-[280px] max-w-[320px] flex flex-col bg-slate-100 rounded-xl',
-              dragOverColumn === column.id && 'ring-2 ring-blue-400 bg-blue-50'
+              'flex-1 min-w-[280px] max-w-[320px] flex flex-col bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors',
+              dragOverColumn === column.id && 'ring-2 ring-blue-400 bg-blue-50 dark:bg-blue-900/30'
             )}
             onDragOver={(e) => handleDragOver(e, column.id)}
             onDragLeave={handleDragLeave}
@@ -85,12 +85,12 @@ export function KanbanBoard() {
             <div className="flex items-center justify-between px-3 py-3">
               <div className="flex items-center gap-2">
                 <span className="text-lg">{column.icon}</span>
-                <span className="font-semibold text-slate-700">{column.title}</span>
-                <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-sm rounded-full">
+                <span className="font-semibold text-slate-700 dark:text-slate-200">{column.title}</span>
+                <span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm rounded-full">
                   {tasksByStatus[column.id]?.length || 0}
                 </span>
               </div>
-              <button className="p-1 hover:bg-slate-200 rounded transition-colors">
+              <button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <Plus size={18} className="text-slate-400" />
               </button>
             </div>
@@ -107,7 +107,7 @@ export function KanbanBoard() {
               ))}
 
               {tasksByStatus[column.id]?.length === 0 && (
-                <div className="text-center py-8 text-slate-400 text-sm">
+                <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">
                   No tasks
                 </div>
               )}
