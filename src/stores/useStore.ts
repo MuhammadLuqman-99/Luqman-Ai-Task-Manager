@@ -138,15 +138,19 @@ export const useStore = create<AppState>()(
 
       // Theme
       toggleDarkMode: () => {
-        set((state) => {
-          const newDarkMode = !state.darkMode;
-          if (newDarkMode) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
-          return { darkMode: newDarkMode };
-        });
+        const currentDarkMode = get().darkMode;
+        const newDarkMode = !currentDarkMode;
+
+        // Apply to HTML element
+        if (newDarkMode) {
+          document.documentElement.classList.add('dark');
+          document.body.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.body.classList.remove('dark');
+        }
+
+        set({ darkMode: newDarkMode });
       },
 
       // UI Actions
@@ -411,6 +415,7 @@ export const useStore = create<AppState>()(
         // Apply dark mode class on app load
         if (state?.darkMode) {
           document.documentElement.classList.add('dark');
+          document.body.classList.add('dark');
         }
       },
     }

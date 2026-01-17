@@ -46,6 +46,42 @@ function sendJSON(res, data, status = 200) {
   res.end(JSON.stringify(data));
 }
 
+// ============ AUTOMATION RULES ============
+
+// Apply automation rules after task update
+// updatedFields: object with fields that were explicitly updated
+function applyAutomation(taskId, updatedFields = {}) {
+  const task = db.prepare('SELECT * FROM tasks WHERE (task_id = ? OR id = ?) AND is_deleted = 0').get(taskId, taskId);
+  if (!task) return null;
+
+  let changes = [];
+
+  // Rule 1: Auto-complete when progress = 100%
+  if (task.progress === 100 && task.status !== 'DONE') {
+    db.prepare('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?')
+      .run('DONE', now(), task.id);
+    changes.push('Auto-completed (progress 100%)');
+  }
+
+  // Rule 2: Auto-move to IN_PROGRESS when progress > 0 (only if progress was updated, not status)
+  if (updatedFields.progress && !updatedFields.status &&
+      task.progress > 0 && task.progress < 100 &&
+      ['BACKLOG', 'PLANNED', 'READY'].includes(task.status)) {
+    db.prepare('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?')
+      .run('IN_PROGRESS', now(), task.id);
+    changes.push('Auto-moved to IN_PROGRESS');
+  }
+
+  // Rule 3: Reset progress to 0 when explicitly moved back to BACKLOG
+  if (updatedFields.status && task.status === 'BACKLOG' && task.progress > 0) {
+    db.prepare('UPDATE tasks SET progress = 0, updated_at = ? WHERE id = ?')
+      .run(now(), task.id);
+    changes.push('Reset progress to 0');
+  }
+
+  return changes.length > 0 ? changes : null;
+}
+
 const server = http.createServer(async (req, res) => {
   // CORS preflight
   if (req.method === 'OPTIONS') {
@@ -116,12 +152,13 @@ const server = http.createServer(async (req, res) => {
 
       const updates = [];
       const params = [];
+      const updatedFields = {}; // Track which fields were updated
 
-      if (body.title) { updates.push('title = ?'); params.push(body.title); }
-      if (body.status) { updates.push('status = ?'); params.push(body.status.toUpperCase()); }
-      if (body.priority) { updates.push('priority = ?'); params.push(body.priority); }
-      if (body.progress !== undefined) { updates.push('progress = ?'); params.push(body.progress); }
-      if (body.description) { updates.push('description = ?'); params.push(body.description); }
+      if (body.title) { updates.push('title = ?'); params.push(body.title); updatedFields.title = true; }
+      if (body.status) { updates.push('status = ?'); params.push(body.status.toUpperCase()); updatedFields.status = true; }
+      if (body.priority) { updates.push('priority = ?'); params.push(body.priority); updatedFields.priority = true; }
+      if (body.progress !== undefined) { updates.push('progress = ?'); params.push(body.progress); updatedFields.progress = true; }
+      if (body.description) { updates.push('description = ?'); params.push(body.description); updatedFields.description = true; }
 
       if (updates.length === 0) {
         return sendJSON(res, { success: false, error: 'No updates provided' }, 400);
@@ -137,7 +174,13 @@ const server = http.createServer(async (req, res) => {
       `).run(...params);
 
       if (result.changes > 0) {
-        return sendJSON(res, { success: true, message: `Task ${taskId} updated` });
+        // Apply automation rules with info about what was updated
+        const automationChanges = applyAutomation(taskId, updatedFields);
+        return sendJSON(res, {
+          success: true,
+          message: `Task ${taskId} updated`,
+          automation: automationChanges
+        });
       } else {
         return sendJSON(res, { success: false, error: 'Task not found' }, 404);
       }
@@ -173,15 +216,42 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // GET /sync - Get tasks updated since timestamp (for polling)
+    if (req.method === 'GET' && pathname === '/sync') {
+      const since = url.searchParams.get('since');
+      let tasks;
+
+      if (since) {
+        tasks = db.prepare('SELECT * FROM tasks WHERE updated_at > ? AND is_deleted = 0 ORDER BY updated_at DESC')
+          .all(since);
+      } else {
+        tasks = db.prepare('SELECT * FROM tasks WHERE is_deleted = 0 ORDER BY updated_at DESC LIMIT 50')
+          .all();
+      }
+
+      return sendJSON(res, {
+        success: true,
+        tasks,
+        count: tasks.length,
+        timestamp: now()
+      });
+    }
+
     // GET / - API info
     if (req.method === 'GET' && pathname === '/') {
       return sendJSON(res, {
         name: 'Luqman AI Task Manager API',
-        version: '1.0.0',
+        version: '1.1.0',
+        features: [
+          'Auto-complete tasks when progress = 100%',
+          'Auto-move to IN_PROGRESS when progress > 0',
+          'Sync endpoint for real-time updates'
+        ],
         endpoints: {
           'GET /tasks': 'List all tasks',
+          'GET /sync?since=': 'Get tasks updated since timestamp',
           'POST /tasks': 'Create task { title, type?, priority?, status?, description? }',
-          'PUT /tasks/:id': 'Update task { title?, status?, priority?, progress? }',
+          'PUT /tasks/:id': 'Update task (with automation)',
           'POST /tasks/:id/complete': 'Mark task as done',
           'DELETE /tasks/:id': 'Delete task'
         }

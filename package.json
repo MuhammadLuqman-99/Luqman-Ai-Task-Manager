@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "api": "node api-server.cjs",
+    "start": "concurrently \"npm run api\" \"npm run tauri dev\"",
+    "api:bg": "node api-server.cjs &"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
@@ -25,6 +28,7 @@
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
+    "concurrently": "^9.2.1",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
