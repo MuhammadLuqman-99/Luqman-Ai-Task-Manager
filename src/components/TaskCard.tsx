@@ -1,6 +1,16 @@
 import { Task, TASK_TYPES, PRIORITIES } from '@/types';
 import { useStore } from '@/stores/useStore';
+import { CheckSquare, Clock, Play } from 'lucide-react';
 import clsx from 'clsx';
+
+// Format seconds to human readable
+function formatTime(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+  const hours = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  return `${hours}h ${mins}m`;
+}
 
 interface TaskCardProps {
   task: Task;
@@ -50,7 +60,17 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
         {task.title}
       </h3>
 
-      {/* Footer: Type + Progress + AI indicator */}
+      {/* Subtasks indicator */}
+      {task.subtasks && task.subtasks.length > 0 && (
+        <div className="flex items-center gap-1.5 mb-2 text-xs text-slate-500 dark:text-slate-400">
+          <CheckSquare size={12} />
+          <span>
+            {task.subtasks.filter(s => s.completed).length}/{task.subtasks.length}
+          </span>
+        </div>
+      )}
+
+      {/* Footer: Type + Progress + Time */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span
@@ -77,9 +97,26 @@ export function TaskCard({ task, onDragStart, isDragging }: TaskCardProps) {
           )}
         </div>
 
-        {task.isAiLinked && (
-          <span className="text-violet-500 dark:text-violet-400 text-sm">@ai</span>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Time tracking indicator */}
+          {(task.totalTimeSpent && task.totalTimeSpent > 0) && (
+            <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+              <Clock size={12} />
+              {formatTime(task.totalTimeSpent)}
+            </span>
+          )}
+
+          {/* Timer running indicator */}
+          {task.isTimerRunning && (
+            <span className="flex items-center gap-1 text-xs text-green-500 animate-pulse">
+              <Play size={12} fill="currentColor" />
+            </span>
+          )}
+
+          {task.isAiLinked && (
+            <span className="text-violet-500 dark:text-violet-400 text-sm">@ai</span>
+          )}
+        </div>
       </div>
 
       {/* Progress Bar */}

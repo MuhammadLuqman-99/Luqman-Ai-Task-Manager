@@ -126,7 +126,8 @@ fn init_database(conn: &Connection) -> Result<(), rusqlite::Error> {
             name TEXT NOT NULL UNIQUE,
             color TEXT NOT NULL DEFAULT '#3b82f6',
             icon TEXT,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            updated_at TEXT
         );
 
         CREATE TABLE IF NOT EXISTS tasks (
@@ -156,8 +157,8 @@ fn init_database(conn: &Connection) -> Result<(), rusqlite::Error> {
     if count == 0 {
         let now = Utc::now().to_rfc3339();
         conn.execute(
-            "INSERT INTO workspaces (id, name, color, created_at) VALUES (?1, ?2, ?3, ?4)",
-            params![Uuid::new_v4().to_string(), "Development", "#3b82f6", now],
+            "INSERT INTO workspaces (id, name, color, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![Uuid::new_v4().to_string(), "Development", "#3b82f6", &now, &now],
         )?;
     }
 
@@ -202,8 +203,8 @@ fn create_workspace(state: tauri::State<AppState>, name: String, color: String) 
     let now = Utc::now().to_rfc3339();
 
     conn.execute(
-        "INSERT INTO workspaces (id, name, color, created_at) VALUES (?1, ?2, ?3, ?4)",
-        params![id, name, color, now],
+        "INSERT INTO workspaces (id, name, color, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+        params![&id, &name, &color, &now, &now],
     ).map_err(|e| e.to_string())?;
 
     Ok(Workspace {

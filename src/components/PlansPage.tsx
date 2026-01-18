@@ -104,8 +104,8 @@ export function PlansPage() {
       <div className="flex-1 p-6 overflow-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Plans</h1>
-            <p className="text-slate-500">Schedule and track your project timelines</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Plans</h1>
+            <p className="text-slate-500 dark:text-slate-400">Schedule and track your project timelines</p>
           </div>
           <button
             onClick={() => setShowNewPlan(true)}
@@ -117,36 +117,36 @@ export function PlansPage() {
         </div>
 
         {/* Calendar Header */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b border-slate-200">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
             <button
               onClick={() => navigateMonth(-1)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={20} className="dark:text-white" />
             </button>
-            <h2 className="text-lg font-semibold text-slate-800">
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-white">
               {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </h2>
             <button
               onClick={() => navigateMonth(1)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={20} className="dark:text-white" />
             </button>
           </div>
 
           {/* Calendar Grid */}
           <div className="grid grid-cols-7">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="p-3 text-center text-sm font-medium text-slate-500 border-b border-slate-200">
+              <div key={day} className="p-3 text-center text-sm font-medium text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
                 {day}
               </div>
             ))}
 
             {/* Empty cells for days before month starts */}
             {Array.from({ length: startingDay }).map((_, i) => (
-              <div key={`empty-${i}`} className="h-24 border-b border-r border-slate-100 bg-slate-50" />
+              <div key={`empty-${i}`} className="h-24 border-b border-r border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50" />
             ))}
 
             {/* Days of the month */}
@@ -159,13 +159,13 @@ export function PlansPage() {
                 <div
                   key={day}
                   className={clsx(
-                    'h-24 p-2 border-b border-r border-slate-100 hover:bg-slate-50 transition-colors',
-                    isToday && 'bg-blue-50'
+                    'h-24 p-2 border-b border-r border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors',
+                    isToday && 'bg-blue-50 dark:bg-blue-900/30'
                   )}
                 >
                   <span className={clsx(
                     'text-sm font-medium',
-                    isToday ? 'text-blue-600' : 'text-slate-600'
+                    isToday ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'
                   )}>
                     {day}
                   </span>
@@ -181,7 +181,7 @@ export function PlansPage() {
                       </div>
                     ))}
                     {plansForDay.length > 2 && (
-                      <div className="text-xs text-slate-400">+{plansForDay.length - 2} more</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">+{plansForDay.length - 2} more</div>
                     )}
                   </div>
                 </div>
@@ -198,40 +198,40 @@ export function PlansPage() {
               <div
                 key={plan.id}
                 onClick={() => setSelectedPlan(plan)}
-                className="bg-white rounded-xl p-4 border border-slate-200 hover:border-slate-300 cursor-pointer transition-colors"
+                className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: plan.color }}
                   />
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-400 dark:text-slate-500">
                     {plan.taskIds.length} tasks
                   </span>
                 </div>
-                <h3 className="font-semibold text-slate-800 mb-1">{plan.title}</h3>
+                <h3 className="font-semibold text-slate-800 dark:text-white mb-1">{plan.title}</h3>
                 {plan.description && (
-                  <p className="text-sm text-slate-500 mb-3 line-clamp-2">{plan.description}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">{plan.description}</p>
                 )}
-                <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
+                <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 mb-3">
                   <Calendar size={14} />
                   <span>{plan.startDate} - {plan.endDate}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{ width: `${progress}%`, backgroundColor: plan.color }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-slate-600">{progress}%</span>
+                  <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{progress}%</span>
                 </div>
               </div>
             );
           })}
 
           {filteredPlans.length === 0 && (
-            <div className="col-span-full text-center py-12 text-slate-400">
+            <div className="col-span-full text-center py-12 text-slate-400 dark:text-slate-500">
               <Calendar size={48} className="mx-auto mb-4 opacity-50" />
               <p>No plans yet. Create your first plan to get started!</p>
             </div>
@@ -242,53 +242,53 @@ export function PlansPage() {
       {/* New Plan Modal */}
       {showNewPlan && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col">
-            <div className="p-4 border-b border-slate-200">
-              <h2 className="text-lg font-semibold text-slate-800">Create New Plan</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Create New Plan</h2>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Title</label>
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Title</label>
                 <input
                   type="text"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-700 dark:text-white dark:placeholder-slate-400"
                   placeholder="Sprint 1, Feature Launch, etc."
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Description</label>
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Description</label>
                 <textarea
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none bg-white dark:bg-slate-700 dark:text-white dark:placeholder-slate-400"
                   rows={2}
                   placeholder="Optional description..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Start Date</label>
+                  <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Start Date</label>
                   <input
                     type="date"
                     value={newStartDate}
                     onChange={(e) => setNewStartDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-700 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">End Date</label>
+                  <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">End Date</label>
                   <input
                     type="date"
                     value={newEndDate}
                     onChange={(e) => setNewEndDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-700 dark:text-white"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Color</label>
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Color</label>
                 <div className="flex gap-2">
                   {PLAN_COLORS.map(color => (
                     <button
@@ -296,7 +296,7 @@ export function PlansPage() {
                       onClick={() => setNewColor(color)}
                       className={clsx(
                         'w-8 h-8 rounded-lg transition-transform',
-                        newColor === color && 'ring-2 ring-offset-2 ring-blue-500 scale-110'
+                        newColor === color && 'ring-2 ring-offset-2 dark:ring-offset-slate-800 ring-blue-500 scale-110'
                       )}
                       style={{ backgroundColor: color }}
                     />
@@ -304,33 +304,33 @@ export function PlansPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Link Tasks</label>
-                <div className="max-h-40 overflow-y-auto border border-slate-200 rounded-lg divide-y divide-slate-100">
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">Link Tasks</label>
+                <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-600 rounded-lg divide-y divide-slate-100 dark:divide-slate-700">
                   {filteredTasks.map(task => (
                     <label
                       key={task.id}
-                      className="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer"
+                      className="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         checked={selectedTaskIds.includes(task.id)}
                         onChange={() => toggleTaskSelection(task.id)}
-                        className="rounded border-slate-300"
+                        className="rounded border-slate-300 dark:border-slate-600"
                       />
-                      <span className="text-sm text-slate-700 truncate">{task.title}</span>
-                      <span className="text-xs text-slate-400 ml-auto">{task.taskId}</span>
+                      <span className="text-sm text-slate-700 dark:text-slate-200 truncate">{task.title}</span>
+                      <span className="text-xs text-slate-400 dark:text-slate-500 ml-auto">{task.taskId}</span>
                     </label>
                   ))}
                   {filteredTasks.length === 0 && (
-                    <div className="p-4 text-center text-slate-400 text-sm">No tasks available</div>
+                    <div className="p-4 text-center text-slate-400 dark:text-slate-500 text-sm">No tasks available</div>
                   )}
                 </div>
               </div>
             </div>
-            <div className="p-4 border-t border-slate-200 flex justify-end gap-3">
+            <div className="p-4 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
               <button
                 onClick={() => setShowNewPlan(false)}
-                className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
                 Cancel
               </button>
@@ -348,12 +348,12 @@ export function PlansPage() {
 
       {/* Plan Detail Sidebar */}
       {selectedPlan && (
-        <div className="w-80 border-l border-slate-200 bg-white p-4 overflow-y-auto">
+        <div className="w-80 border-l border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-800">Plan Details</h2>
+            <h2 className="font-semibold text-slate-800 dark:text-white">Plan Details</h2>
             <button
               onClick={() => setSelectedPlan(null)}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
               &times;
             </button>
@@ -364,22 +364,22 @@ export function PlansPage() {
             style={{ backgroundColor: selectedPlan.color }}
           />
 
-          <h3 className="text-lg font-semibold text-slate-800 mb-2">{selectedPlan.title}</h3>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2">{selectedPlan.title}</h3>
           {selectedPlan.description && (
-            <p className="text-sm text-slate-500 mb-4">{selectedPlan.description}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{selectedPlan.description}</p>
           )}
 
-          <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
             <Clock size={16} />
             <span>{selectedPlan.startDate} - {selectedPlan.endDate}</span>
           </div>
 
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-600">Progress</span>
-              <span className="text-sm text-slate-500">{getTaskProgress(selectedPlan)}%</span>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Progress</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">{getTaskProgress(selectedPlan)}%</span>
             </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all"
                 style={{ width: `${getTaskProgress(selectedPlan)}%`, backgroundColor: selectedPlan.color }}
@@ -388,19 +388,19 @@ export function PlansPage() {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium text-slate-600 mb-2">Linked Tasks ({selectedPlan.taskIds.length})</h4>
+            <h4 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Linked Tasks ({selectedPlan.taskIds.length})</h4>
             <div className="space-y-2">
               {selectedPlan.taskIds.map(taskId => {
                 const task = tasks.find(t => t.id === taskId);
                 if (!task) return null;
                 return (
-                  <div key={taskId} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+                  <div key={taskId} className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
                     {task.status === 'DONE' ? (
                       <CheckCircle2 size={16} className="text-green-500" />
                     ) : (
-                      <Circle size={16} className="text-slate-300" />
+                      <Circle size={16} className="text-slate-300 dark:text-slate-600" />
                     )}
-                    <span className="text-sm text-slate-700 flex-1 truncate">{task.title}</span>
+                    <span className="text-sm text-slate-700 dark:text-slate-200 flex-1 truncate">{task.title}</span>
                   </div>
                 );
               })}
@@ -412,7 +412,7 @@ export function PlansPage() {
               deletePlan(selectedPlan.id);
               setSelectedPlan(null);
             }}
-            className="w-full mt-6 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="w-full mt-6 px-4 py-2 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
           >
             Delete Plan
           </button>

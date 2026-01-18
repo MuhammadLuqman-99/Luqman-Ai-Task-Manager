@@ -129,63 +129,63 @@ export function StatsPage() {
     <div className="h-full p-6 overflow-auto">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-800">Statistics</h1>
-          <p className="text-slate-500">Track your productivity and task progress</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Statistics</h1>
+          <p className="text-slate-500 dark:text-slate-400">Track your productivity and task progress</p>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <BarChart3 size={20} className="text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <BarChart3 size={20} className="text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="text-sm text-slate-500">Total Tasks</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">Total Tasks</span>
             </div>
-            <p className="text-3xl font-bold text-slate-800">{stats.total}</p>
+            <p className="text-3xl font-bold text-slate-800 dark:text-white">{stats.total}</p>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle2 size={20} className="text-green-600" />
+              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <CheckCircle2 size={20} className="text-green-600 dark:text-green-400" />
               </div>
-              <span className="text-sm text-slate-500">Completed</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">Completed</span>
             </div>
-            <p className="text-3xl font-bold text-slate-800">{stats.completedCount}</p>
-            <p className="text-sm text-green-600">+{stats.completedThisWeek} this week</p>
+            <p className="text-3xl font-bold text-slate-800 dark:text-white">{stats.completedCount}</p>
+            <p className="text-sm text-green-600 dark:text-green-400">+{stats.completedThisWeek} this week</p>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <Activity size={20} className="text-amber-600" />
+              <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                <Activity size={20} className="text-amber-600 dark:text-amber-400" />
               </div>
-              <span className="text-sm text-slate-500">In Progress</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">In Progress</span>
             </div>
-            <p className="text-3xl font-bold text-slate-800">{stats.inProgress}</p>
+            <p className="text-3xl font-bold text-slate-800 dark:text-white">{stats.inProgress}</p>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-violet-100 rounded-lg">
-                <Target size={20} className="text-violet-600" />
+              <div className="p-2 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
+                <Target size={20} className="text-violet-600 dark:text-violet-400" />
               </div>
-              <span className="text-sm text-slate-500">Completion Rate</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">Completion Rate</span>
             </div>
-            <p className="text-3xl font-bold text-slate-800">{completionRate}%</p>
+            <p className="text-3xl font-bold text-slate-800 dark:text-white">{completionRate}%</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Weekly Activity Chart */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">Weekly Activity</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Weekly Activity</h3>
             <div className="flex items-end justify-between gap-2 h-40">
               {weeklyData.map((day, index) => (
                 <div key={index} className="flex-1 flex flex-col items-center gap-2">
                   <div className="relative w-full flex flex-col items-center">
-                    <span className="text-xs text-slate-500 mb-1">{day.completed}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 mb-1">{day.completed}</span>
                     <div
                       className="w-full bg-blue-500 rounded-t transition-all"
                       style={{
@@ -195,15 +195,15 @@ export function StatsPage() {
                       }}
                     />
                   </div>
-                  <span className="text-xs text-slate-500">{day.day}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{day.day}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Status Distribution */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">Status Distribution</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Status Distribution</h3>
             <div className="space-y-3">
               {COLUMNS.map(col => {
                 const count = stats.byStatus[col.id];
@@ -211,13 +211,13 @@ export function StatsPage() {
                 return (
                   <div key={col.id}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-slate-600 flex items-center gap-2">
+                      <span className="text-sm text-slate-600 dark:text-slate-300 flex items-center gap-2">
                         <span>{col.icon}</span>
                         {col.title}
                       </span>
-                      <span className="text-sm font-medium text-slate-800">{count}</span>
+                      <span className="text-sm font-medium text-slate-800 dark:text-white">{count}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all"
                         style={{ width: `${percentage}%`, backgroundColor: col.color }}
@@ -232,8 +232,8 @@ export function StatsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Priority Distribution */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">By Priority</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">By Priority</h3>
             <div className="space-y-4">
               {PRIORITIES.map(p => {
                 const count = stats.byPriority[p.id];
@@ -248,12 +248,12 @@ export function StatsPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-slate-600">
+                        <span className="text-sm text-slate-600 dark:text-slate-300">
                           {p.id === 1 ? 'High' : p.id === 2 ? 'Medium' : 'Low'}
                         </span>
-                        <span className="text-sm font-medium text-slate-800">{count}</span>
+                        <span className="text-sm font-medium text-slate-800 dark:text-white">{count}</span>
                       </div>
-                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full"
                           style={{ width: `${percentage}%`, backgroundColor: p.color }}
@@ -267,8 +267,8 @@ export function StatsPage() {
           </div>
 
           {/* Type Distribution */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">By Type</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">By Type</h3>
             <div className="space-y-4">
               {TASK_TYPES.map(t => {
                 const count = stats.byType[t.id];
@@ -283,10 +283,10 @@ export function StatsPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-slate-600">{t.label}</span>
-                        <span className="text-sm font-medium text-slate-800">{count}</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">{t.label}</span>
+                        <span className="text-sm font-medium text-slate-800 dark:text-white">{count}</span>
                       </div>
-                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full"
                           style={{ width: `${percentage}%`, backgroundColor: t.color }}
@@ -300,14 +300,14 @@ export function StatsPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">Insights</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Insights</h3>
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                <Clock size={18} className="text-slate-500" />
+              <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                <Clock size={18} className="text-slate-500 dark:text-slate-400" />
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Avg. Completion Time</p>
-                  <p className="text-lg font-bold text-slate-800">
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Avg. Completion Time</p>
+                  <p className="text-lg font-bold text-slate-800 dark:text-white">
                     {stats.averageCompletionTime > 24
                       ? `${Math.round(stats.averageCompletionTime / 24)} days`
                       : `${Math.round(stats.averageCompletionTime)} hours`}
@@ -315,21 +315,21 @@ export function StatsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                <TrendingUp size={18} className="text-green-600" />
+              <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <TrendingUp size={18} className="text-green-600 dark:text-green-400" />
                 <div>
-                  <p className="text-sm font-medium text-slate-700">This Month</p>
-                  <p className="text-lg font-bold text-green-600">
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-200">This Month</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400">
                     {stats.completedThisMonth} completed
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-amber-50 rounded-lg">
-                <AlertCircle size={18} className="text-amber-600" />
+              <div className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                <AlertCircle size={18} className="text-amber-600 dark:text-amber-400" />
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Pending</p>
-                  <p className="text-lg font-bold text-amber-600">
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Pending</p>
+                  <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
                     {stats.pending} tasks waiting
                   </p>
                 </div>
@@ -340,25 +340,25 @@ export function StatsPage() {
 
         {/* Workspace Stats (if multiple workspaces) */}
         {!selectedWorkspaceId && workspaces.length > 1 && (
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
-            <h3 className="font-semibold text-slate-800 mb-4">Tasks by Workspace</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Tasks by Workspace</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {workspaces.map(workspace => (
                 <div
                   key={workspace.id}
-                  className="p-4 rounded-lg border border-slate-200"
+                  className="p-4 rounded-lg border border-slate-200 dark:border-slate-700"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div
                       className="w-4 h-4 rounded"
                       style={{ backgroundColor: workspace.color }}
                     />
-                    <span className="text-sm font-medium text-slate-700 truncate">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
                       {workspace.name}
                     </span>
                   </div>
-                  <p className="text-2xl font-bold text-slate-800">{workspace.taskCount}</p>
-                  <p className="text-xs text-slate-500">tasks</p>
+                  <p className="text-2xl font-bold text-slate-800 dark:text-white">{workspace.taskCount}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">tasks</p>
                 </div>
               ))}
             </div>

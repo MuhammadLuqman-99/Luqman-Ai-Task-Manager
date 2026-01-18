@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 export function KanbanBoard() {
-  const { tasks, isLoading, filterType, filterPriority, searchQuery, updateTaskStatus } = useStore();
+  const { tasks, isLoading, filterType, filterPriority, searchQuery, updateTaskStatus, setShowNewTaskModal } = useStore();
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<TaskStatus | null>(null);
 
@@ -90,7 +90,11 @@ export function KanbanBoard() {
                   {tasksByStatus[column.id]?.length || 0}
                 </span>
               </div>
-              <button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors">
+              <button
+                onClick={() => setShowNewTaskModal(true)}
+                className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+                title="Add new task"
+              >
                 <Plus size={18} className="text-slate-400" />
               </button>
             </div>

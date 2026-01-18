@@ -2,6 +2,32 @@ export type TaskStatus = 'BACKLOG' | 'PLANNED' | 'READY' | 'IN_PROGRESS' | 'TEST
 export type TaskType = 'feat' | 'bug' | 'research' | 'chore';
 export type Priority = 1 | 2 | 3;
 
+// Subtask
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+}
+
+// Time Entry for time tracking
+export interface TimeEntry {
+  id: string;
+  startTime: string;
+  endTime?: string;
+  duration: number; // in seconds
+}
+
+// Activity Log Entry
+export interface ActivityEntry {
+  id: string;
+  action: 'created' | 'updated' | 'status_changed' | 'completed' | 'time_logged' | 'subtask_added' | 'subtask_completed';
+  description: string;
+  oldValue?: string;
+  newValue?: string;
+  timestamp: string;
+}
+
 export interface Task {
   id: string;
   taskId: string;
@@ -16,6 +42,12 @@ export interface Task {
   isAiLinked: boolean;
   createdAt: string;
   updatedAt: string;
+  // New fields
+  subtasks?: Subtask[];
+  timeEntries?: TimeEntry[];
+  totalTimeSpent?: number; // in seconds
+  isTimerRunning?: boolean;
+  activities?: ActivityEntry[];
 }
 
 export interface Workspace {

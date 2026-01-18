@@ -10,7 +10,8 @@
     "tauri": "tauri",
     "api": "node api-server.cjs",
     "start": "concurrently \"npm run api\" \"npm run tauri dev\"",
-    "api:bg": "node api-server.cjs &"
+    "api:bg": "node api-server.cjs &",
+    "setup": "node scripts/setup-global-claude.cjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",

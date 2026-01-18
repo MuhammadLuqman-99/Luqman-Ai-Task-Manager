@@ -38,13 +38,13 @@ export function NewWorkspaceModal() {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-md mx-4">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-800">Create Workspace</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Create Workspace</h2>
           <button
             onClick={() => setShowNewWorkspaceModal(false)}
-            className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
             <X size={20} className="text-slate-400" />
           </button>
@@ -54,7 +54,7 @@ export function NewWorkspaceModal() {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Workspace Name *
             </label>
             <input
@@ -62,14 +62,14 @@ export function NewWorkspaceModal() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g., Marketing, Development, Personal"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-slate-700 dark:text-white dark:placeholder-slate-400"
               autoFocus
             />
           </div>
 
           {/* Color */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Color
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -80,7 +80,7 @@ export function NewWorkspaceModal() {
                   onClick={() => setColor(c)}
                   className={clsx(
                     'w-8 h-8 rounded-lg transition-transform',
-                    color === c && 'ring-2 ring-offset-2 ring-blue-500 scale-110'
+                    color === c && 'ring-2 ring-offset-2 dark:ring-offset-slate-800 ring-blue-500 scale-110'
                   )}
                   style={{ backgroundColor: c }}
                 />
@@ -90,12 +90,12 @@ export function NewWorkspaceModal() {
 
           {/* Preview */}
           <div className="pt-2">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Preview
             </label>
-            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
               <div className="w-6 h-6 rounded" style={{ backgroundColor: color }} />
-              <span className="font-medium text-slate-700">
+              <span className="font-medium text-slate-700 dark:text-slate-200">
                 {name || 'Workspace Name'}
               </span>
             </div>
@@ -106,7 +106,7 @@ export function NewWorkspaceModal() {
             <button
               type="button"
               onClick={() => setShowNewWorkspaceModal(false)}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
             >
               Cancel
             </button>

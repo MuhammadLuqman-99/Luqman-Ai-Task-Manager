@@ -329,24 +329,48 @@ const server = http.createServer(async (req, res) => {
 
     // GET / - API info
     if (req.method === 'GET' && pathname === '/') {
+      const os = require('os');
+      const fs = require('fs');
+      const globalClaudePath = path.join(os.homedir(), 'CLAUDE.md');
+      const hasGlobalConfig = fs.existsSync(globalClaudePath);
+
       return sendJSON(res, {
         name: 'Luqman AI Task Manager API',
-        version: '1.2.0',
+        version: '1.3.0',
+        status: 'running',
+        setup: {
+          globalConfig: hasGlobalConfig ? 'configured ✅' : 'not configured ❌',
+          setupCommand: 'npm run setup',
+          configPath: globalClaudePath,
+          helpText: hasGlobalConfig
+            ? 'Global configuration detected. Claude can create tasks from any project!'
+            : 'Run "npm run setup" to enable Claude integration in all projects.'
+        },
         features: [
           'Workspace support - auto-create workspace from folder name',
+          'Global configuration - setup once, works everywhere',
           'Auto-complete tasks when progress = 100%',
           'Auto-move to IN_PROGRESS when progress > 0',
           'Sync endpoint for real-time updates'
         ],
         endpoints: {
+          'GET /': 'API documentation (you are here)',
           'GET /workspaces': 'List all workspaces',
+          'POST /workspaces': 'Create workspace { name, color? }',
           'GET /tasks': 'List all tasks',
           'GET /tasks?workspace=name': 'List tasks filtered by workspace',
-          'GET /sync?since=': 'Get tasks updated since timestamp',
+          'GET /tasks?status=STATUS': 'List tasks filtered by status',
+          'GET /sync?since=ISO_DATE': 'Get tasks updated since timestamp',
           'POST /tasks': 'Create task { title, type?, priority?, status?, description?, workspace? }',
           'PUT /tasks/:id': 'Update task (with automation)',
           'POST /tasks/:id/complete': 'Mark task as done',
           'DELETE /tasks/:id': 'Delete task'
+        },
+        examples: {
+          'Create task': 'curl -X POST http://localhost:3847/tasks -H "Content-Type: application/json" -d \'{"title":"My task","workspace":"my-project"}\'',
+          'List tasks': 'curl http://localhost:3847/tasks',
+          'Complete task': 'curl -X POST http://localhost:3847/tasks/TASK_ID/complete',
+          'List workspaces': 'curl http://localhost:3847/workspaces'
         }
       });
     }
